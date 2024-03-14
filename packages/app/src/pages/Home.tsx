@@ -21,14 +21,14 @@ export function Home(): JSX.Element {
 
   if (!canUser('read', 'price_lists')) {
     return (
-      <HomePageLayout title='Price Lists'>
+      <HomePageLayout title='Price lists'>
         <EmptyState title='You are not authorized' />
       </HomePageLayout>
     )
   }
 
   return (
-    <HomePageLayout title='Price Lists'>
+    <HomePageLayout title='Price lists'>
       <SearchWithNav
         queryString={queryString}
         onUpdate={(qs) => {
@@ -50,27 +50,27 @@ export function Home(): JSX.Element {
         emptyState={
           hasActiveFilter ? (
             <EmptyState
-              title='No Price lists found!'
+              title='No price lists found!'
               description={
                 <div>
-                  <p>We didn't find any Price list matching the search.</p>
+                  <p>We didn't find any price list matching the search.</p>
                 </div>
               }
               action={
                 canUser('create', 'price_lists') && (
                   <Link href={appRoutes.priceListNew.makePath({})}>
-                    <Button variant='primary'>Add a Price list</Button>
+                    <Button variant='primary'>Add a price list</Button>
                   </Link>
                 )
               }
             />
           ) : (
             <EmptyState
-              title='No Price lists yet!'
+              title='No price lists yet!'
               action={
                 canUser('create', 'price_lists') && (
                   <Link href={appRoutes.priceListNew.makePath({})}>
-                    <Button variant='primary'>Add a Price list</Button>
+                    <Button variant='primary'>Add a price list</Button>
                   </Link>
                 )
               }

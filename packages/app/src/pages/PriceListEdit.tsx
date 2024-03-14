@@ -40,7 +40,7 @@ export function PriceListEdit(): JSX.Element {
   if (!canUser('update', 'price_lists')) {
     return (
       <PageLayout
-        title='Edit Price list'
+        title='Edit price list'
         navigationButton={{
           onClick: () => {
             setLocation(goBackUrl)
@@ -68,7 +68,7 @@ export function PriceListEdit(): JSX.Element {
     <PageLayout
       title={
         <SkeletonTemplate isLoading={isLoading}>
-          Edit Price list
+          Edit price list
         </SkeletonTemplate>
       }
       navigationButton={{

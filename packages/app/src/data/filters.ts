@@ -21,7 +21,7 @@ export const pricesInstructions = ({
   priceListId
 }: PricesInstructionsConfig): FiltersInstructions => [
   {
-    label: 'Price List',
+    label: 'Price list',
     type: 'options',
     sdk: {
       predicate: 'price_list_id_in',

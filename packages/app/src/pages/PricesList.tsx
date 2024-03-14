@@ -48,12 +48,12 @@ export function PricesList(): JSX.Element {
   if (error != null) {
     return (
       <PageLayout
-        title='Price Lists'
+        title='Price lists'
         navigationButton={{
           onClick: () => {
             setLocation(appRoutes.home.makePath({}))
           },
-          label: 'Price Lists',
+          label: 'Price lists',
           icon: 'arrowLeft'
         }}
         mode={mode}
@@ -109,7 +109,7 @@ export function PricesList(): JSX.Element {
 
   if (!canUser('read', 'price_lists') || !canUser('read', 'prices')) {
     return (
-      <PageLayout title='Price Lists' mode={mode}>
+      <PageLayout title='Price lists' mode={mode}>
         <EmptyState title='You are not authorized' />
       </PageLayout>
     )
@@ -126,7 +126,7 @@ export function PricesList(): JSX.Element {
         onClick: () => {
           setLocation(appRoutes.home.makePath({}))
         },
-        label: 'Price Lists',
+        label: 'Price lists',
         icon: 'arrowLeft'
       }}
       actionButton={contextMenu}
@@ -157,7 +157,7 @@ export function PricesList(): JSX.Element {
       {canUser('destroy', 'price_lists') && (
         <Overlay backgroundColor='light'>
           <PageLayout
-            title={`Confirm that you want to delete the Price List with name ${priceList.name}.`}
+            title={`Confirm that you want to delete the price list with name ${priceList.name}.`}
             description='This action cannot be undone, proceed with caution.'
             minHeight={false}
             navigationButton={{
@@ -184,7 +184,7 @@ export function PricesList(): JSX.Element {
               }}
               fullWidth
             >
-              Delete Price List
+              Delete price list
             </Button>
           </PageLayout>
         </Overlay>

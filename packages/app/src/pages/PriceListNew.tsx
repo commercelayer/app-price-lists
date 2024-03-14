@@ -28,7 +28,7 @@ export function PriceListNew(): JSX.Element {
   if (!canUser('create', 'price_lists')) {
     return (
       <PageLayout
-        title='New Price list'
+        title='New price list'
         navigationButton={{
           onClick: () => {
             setLocation(goBackUrl)
@@ -54,7 +54,7 @@ export function PriceListNew(): JSX.Element {
 
   return (
     <PageLayout
-      title={<>New Price list</>}
+      title={<>New price list</>}
       navigationButton={{
         onClick: () => {
           setLocation(goBackUrl)
