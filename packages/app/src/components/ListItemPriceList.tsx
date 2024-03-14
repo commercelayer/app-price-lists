@@ -1,3 +1,4 @@
+import { appRoutes } from '#data/routes'
 import { makePriceList } from '#mocks'
 import {
   Icon,
@@ -6,6 +7,7 @@ import {
   withSkeletonTemplate
 } from '@commercelayer/app-elements'
 import type { PriceList } from '@commercelayer/sdk'
+import { useLocation } from 'wouter'
 
 interface Props {
   resource?: PriceList
@@ -15,8 +17,17 @@ interface Props {
 
 export const ListItemPriceList = withSkeletonTemplate<Props>(
   ({ resource = makePriceList() }): JSX.Element | null => {
+    const [, setLocation] = useLocation()
     return (
-      <ListItem className='items-center' tag='div'>
+      <ListItem
+        className='items-center'
+        tag='a'
+        onClick={() => {
+          setLocation(
+            appRoutes.pricesList.makePath({ priceListId: resource.id })
+          )
+        }}
+      >
         <div>
           <Text weight='bold'>{resource.name}</Text>
         </div>

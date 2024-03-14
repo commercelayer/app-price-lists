@@ -1,5 +1,6 @@
 import { ListItemPriceList } from '#components/ListItemPriceList'
 import { instructions } from '#data/filters'
+import { appRoutes } from '#data/routes'
 import {
   Button,
   EmptyState,
@@ -10,9 +11,8 @@ import {
 import { Link } from 'wouter'
 import { navigate, useSearch } from 'wouter/use-browser-location'
 
-export function PriceListsList(): JSX.Element {
+export function Home(): JSX.Element {
   const { canUser } = useTokenProvider()
-
   const queryString = useSearch()
 
   const { SearchWithNav, FilteredList, hasActiveFilter } = useResourceFilters({
@@ -58,7 +58,7 @@ export function PriceListsList(): JSX.Element {
               }
               action={
                 canUser('create', 'price_lists') && (
-                  <Link href='#'>
+                  <Link href={appRoutes.priceListNew.makePath({})}>
                     <Button variant='primary'>Add a Price list</Button>
                   </Link>
                 )
@@ -69,7 +69,7 @@ export function PriceListsList(): JSX.Element {
               title='No Price lists yet!'
               action={
                 canUser('create', 'price_lists') && (
-                  <Link href='#'>
+                  <Link href={appRoutes.priceListNew.makePath({})}>
                     <Button variant='primary'>Add a Price list</Button>
                   </Link>
                 )
@@ -79,7 +79,7 @@ export function PriceListsList(): JSX.Element {
         }
         actionButton={
           canUser('create', 'price_lists') ? (
-            <Link href='#'>Add new</Link>
+            <Link href={appRoutes.priceListNew.makePath({})}>Add new</Link>
           ) : undefined
         }
       />

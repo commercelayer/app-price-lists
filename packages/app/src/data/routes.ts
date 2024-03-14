@@ -15,5 +15,12 @@ export type PageProps<
 // and `makePath` method to be used to generate the path used in navigation and links
 export const appRoutes = {
   home: createRoute('/'),
-  list: createRoute('/list/')
+  priceListNew: createRoute('/new/'),
+  priceListEdit: createRoute('/:priceListId/edit/'),
+  pricesList: createRoute('/:priceListId/list/')
+  // priceNew
+  // priceDetails
+  // priceEdit
+  // priceTierNew
+  // priceTierEdit
 }
