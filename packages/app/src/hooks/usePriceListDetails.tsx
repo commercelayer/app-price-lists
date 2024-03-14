@@ -14,8 +14,7 @@ export function usePriceListDetails(id: string): {
     isLoading,
     error,
     mutate: mutatePriceList
-  } = useCoreApi('price_lists', 'retrieve', [id], {
-    isPaused: () => isMockedId(id),
+  } = useCoreApi('price_lists', 'retrieve', !isMockedId(id) ? [id] : null, {
     fallbackData: makePriceList()
   })
 
