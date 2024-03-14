@@ -1,6 +1,6 @@
 import type { FiltersInstructions } from '@commercelayer/app-elements'
 
-export const instructions: FiltersInstructions = [
+export const filterInstructions: FiltersInstructions = [
   {
     label: 'Search',
     type: 'textSearch',
@@ -13,13 +13,13 @@ export const instructions: FiltersInstructions = [
   }
 ]
 
-interface PricesInstructionsConfig {
+interface PricesFilterInstructionsConfig {
   priceListId: string
 }
 
-export const pricesInstructions = ({
+export const pricesFilterInstructions = ({
   priceListId
-}: PricesInstructionsConfig): FiltersInstructions => [
+}: PricesFilterInstructionsConfig): FiltersInstructions => [
   {
     label: 'Price list',
     type: 'options',

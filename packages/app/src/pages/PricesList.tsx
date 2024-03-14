@@ -1,6 +1,6 @@
 import { ListEmptyStatePrice } from '#components/ListEmptyStatePrice'
 import { ListItemPrice } from '#components/ListItemPrice'
-import { pricesInstructions } from '#data/filters'
+import { pricesFilterInstructions } from '#data/filters'
 import { appRoutes } from '#data/routes'
 import { usePriceListDetails } from '#hooks/usePriceListDetails'
 import {
@@ -38,7 +38,7 @@ export function PricesList(): JSX.Element {
   const [, setLocation] = useLocation()
 
   const { SearchWithNav, FilteredList } = useResourceFilters({
-    instructions: pricesInstructions({ priceListId })
+    instructions: pricesFilterInstructions({ priceListId })
   })
 
   const { sdkClient } = useCoreSdkProvider()

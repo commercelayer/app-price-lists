@@ -1,5 +1,5 @@
 import { ListItemPriceList } from '#components/ListItemPriceList'
-import { instructions } from '#data/filters'
+import { filterInstructions } from '#data/filters'
 import { appRoutes } from '#data/routes'
 import {
   Button,
@@ -16,7 +16,7 @@ export function Home(): JSX.Element {
   const queryString = useSearch()
 
   const { SearchWithNav, FilteredList, hasActiveFilter } = useResourceFilters({
-    instructions
+    instructions: filterInstructions
   })
 
   if (!canUser('read', 'price_lists')) {
