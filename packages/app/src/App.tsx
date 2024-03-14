@@ -1,7 +1,10 @@
 import { ErrorNotFound } from '#pages/ErrorNotFound'
 import { Home } from '#pages/Home'
+import { PriceDetails } from '#pages/PriceDetails'
+import { PriceEdit } from '#pages/PriceEdit'
 import { PriceListEdit } from '#pages/PriceListEdit'
 import { PriceListNew } from '#pages/PriceListNew'
+import { PriceNew } from '#pages/PriceNew'
 import { PricesList } from '#pages/PricesList'
 import type { FC } from 'react'
 import { Route, Router, Switch } from 'wouter'
@@ -19,6 +22,9 @@ export const App: FC<AppProps> = ({ routerBase }) => {
         <Route path={appRoutes.priceListNew.path} component={PriceListNew} />
         <Route path={appRoutes.priceListEdit.path} component={PriceListEdit} />
         <Route path={appRoutes.pricesList.path} component={PricesList} />
+        <Route path={appRoutes.priceNew.path} component={PriceNew} />
+        <Route path={appRoutes.priceEdit.path} component={PriceEdit} />
+        <Route path={appRoutes.priceDetails.path} component={PriceDetails} />
         <Route>
           <ErrorNotFound />
         </Route>

@@ -1,14 +1,14 @@
+import { appRoutes } from '#data/routes'
 import { makePrice } from '#mocks'
 import {
   Avatar,
   Badge,
   ListItem,
   Text,
-  navigateTo,
   withSkeletonTemplate
 } from '@commercelayer/app-elements'
 import type { Price } from '@commercelayer/sdk'
-import { useLocation } from 'wouter'
+import { useLocation, useRoute } from 'wouter'
 
 interface Props {
   resource?: Price
@@ -20,6 +20,12 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
   ({ resource = makePrice() }): JSX.Element | null => {
     const [, setLocation] = useLocation()
 
+    const [, params] = useRoute<{ priceListId: string }>(
+      appRoutes.pricesList.path
+    )
+
+    const priceListId = params?.priceListId ?? ''
+
     return (
       <ListItem
         tag='a'
@@ -30,13 +36,14 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
           />
         }
         alignItems='center'
-        {...navigateTo({
-          setLocation,
-          destination: {
-            app: 'price_lists',
-            resourceId: resource.id
-          }
-        })}
+        onClick={() => {
+          setLocation(
+            appRoutes.priceDetails.makePath({
+              priceListId,
+              priceId: resource.id
+            })
+          )
+        }}
       >
         <div>
           <Text tag='div' weight='medium' size='small' variant='info'>
