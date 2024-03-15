@@ -7,7 +7,7 @@ export const ListEmptyStateSku: FC = () => {
       title='No skus yet!'
       description={
         <div>
-          <p>Add a price with the API, or use the CLI.</p>
+          <p>Add a SKU with the API, or use the CLI.</p>
           <A
             target='_blank'
             href='https://docs.commercelayer.io/core/v/api-reference/skus'
