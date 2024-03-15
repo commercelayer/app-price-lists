@@ -17,10 +17,10 @@ export const appRoutes = {
   home: createRoute('/'),
   priceListNew: createRoute('/new/'),
   priceListEdit: createRoute('/:priceListId/edit/'),
-  pricesList: createRoute('/:priceListId/list/')
-  // priceNew
-  // priceDetails
-  // priceEdit
+  pricesList: createRoute('/:priceListId/list/'),
+  priceNew: createRoute('/:priceListId/list/new/'),
+  priceDetails: createRoute('/:priceListId/list/:priceId/'),
+  priceEdit: createRoute('/:priceListId/list/:priceId/edit/')
   // priceTierNew
   // priceTierEdit
 }

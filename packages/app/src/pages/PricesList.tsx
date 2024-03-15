@@ -151,6 +151,13 @@ export function PricesList(): JSX.Element {
             created_at: 'desc'
           }
         }}
+        actionButton={
+          canUser('create', 'prices') && (
+            <Link href={appRoutes.priceNew.makePath({ priceListId })}>
+              Add new
+            </Link>
+          )
+        }
         ItemTemplate={ListItemPrice}
         emptyState={<ListEmptyStatePrice />}
       />
