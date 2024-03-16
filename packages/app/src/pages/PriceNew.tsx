@@ -110,8 +110,13 @@ export function PriceNew(): JSX.Element {
             const stockItem = adaptFormValuesToPrice(formValues, priceListId)
             void sdkClient.prices
               .create(stockItem)
-              .then(() => {
-                setLocation(goBackUrl)
+              .then((createdPrice) => {
+                setLocation(
+                  appRoutes.priceDetails.makePath({
+                    priceListId,
+                    priceId: createdPrice.id
+                  })
+                )
               })
               .catch((error) => {
                 setApiError(error)
