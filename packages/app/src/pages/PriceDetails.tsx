@@ -14,7 +14,9 @@ import {
 } from '@commercelayer/app-elements'
 import { Link, useLocation, useRoute } from 'wouter'
 
+import { PriceFrequencyTiers } from '#components/PriceFrequencyTiers'
 import { PriceInfo } from '#components/PriceInfo'
+import { PriceVolumeTiers } from '#components/PriceVolumeTiers'
 import { SkuDescription } from '#components/SkuDescription'
 import { appRoutes } from '#data/routes'
 import { usePriceDetails } from '#hooks/usePriceDetails'
@@ -34,7 +36,7 @@ export function PriceDetails(): JSX.Element {
   const priceListId = params?.priceListId ?? ''
   const priceId = params?.priceId ?? ''
 
-  const { price, isLoading, error } = usePriceDetails(priceId)
+  const { price, isLoading, error, mutatePrice } = usePriceDetails(priceId)
 
   const { sdkClient } = useCoreSdkProvider()
 
@@ -136,6 +138,12 @@ export function PriceDetails(): JSX.Element {
           )}
           <Spacer top='14'>
             <PriceInfo price={price} />
+          </Spacer>
+          <Spacer top='14'>
+            <PriceVolumeTiers price={price} mutatePrice={mutatePrice} />
+          </Spacer>
+          <Spacer top='14'>
+            <PriceFrequencyTiers price={price} mutatePrice={mutatePrice} />
           </Spacer>
         </Spacer>
       </SkeletonTemplate>
