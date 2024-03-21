@@ -1,5 +1,7 @@
 import { appRoutes } from '#data/routes'
 import { makePrice } from '#mocks'
+import type { PriceTierType } from '#types'
+import { getPriceTierSdkResource } from '#utils/priceTiers'
 import {
   ButtonCard,
   Section,
@@ -17,28 +19,48 @@ import { TableItemPriceTier } from './TableItemPriceTier'
 interface Props {
   price: Price
   mutatePrice: KeyedMutator<Price>
+  type: PriceTierType
 }
 
-export const PriceFrequencyTiers: FC<Props> = ({
+export const PriceTiers: FC<Props> = ({
   price = makePrice(),
-  mutatePrice
+  mutatePrice,
+  type
 }) => {
   const [, setLocation] = useLocation()
   const [, params] = useRoute<{ priceListId: string; priceId: string }>(
     appRoutes.priceDetails.path
   )
   const priceListId = params?.priceListId ?? ''
+  const sectionTitle = `${type.charAt(0).toUpperCase()}${type.slice(1)} pricing`
+  const sdkResource = getPriceTierSdkResource(type)
+  const priceTiers = price[sdkResource]
+  const buttonCardCtaPathName =
+    type === 'frequency' ? 'priceFrequencyTierNew' : 'priceVolumeTierNew'
+  const buttonCardIcon = type === 'frequency' ? 'calendarBlank' : 'stack'
+  const buttonCardText =
+    type === 'frequency' ? (
+      <>
+        <a>Add frequency tiers</a> to establish variable pricing for specific
+        intervals based on the frequency of purchase.
+      </>
+    ) : (
+      <>
+        <a>Add volume tiers</a> to enable flexible price adjustments based on
+        the quantities purchased
+      </>
+    )
 
   return (
     <Section
-      title='Frequency pricing'
+      title={sectionTitle}
       border='none'
       actionButton={
-        price.price_frequency_tiers != null &&
-        price.price_frequency_tiers.length > 0 &&
-        price.price_frequency_tiers.length <= 5 && (
+        priceTiers != null &&
+        priceTiers.length > 0 &&
+        priceTiers.length <= 5 && (
           <Link
-            href={appRoutes.priceFrequencyTierNew.makePath({
+            href={appRoutes[buttonCardCtaPathName].makePath({
               priceListId,
               priceId: price.id
             })}
@@ -51,11 +73,11 @@ export const PriceFrequencyTiers: FC<Props> = ({
       {price.price_frequency_tiers == null ||
       price.price_frequency_tiers?.length === 0 ? (
         <ButtonCard
-          icon='calendarBlank'
+          icon={buttonCardIcon}
           padding='6'
           onClick={() => {
             setLocation(
-              appRoutes.priceFrequencyTierNew.makePath({
+              appRoutes[buttonCardCtaPathName].makePath({
                 priceListId,
                 priceId: price.id
               })
@@ -63,8 +85,7 @@ export const PriceFrequencyTiers: FC<Props> = ({
           }}
         >
           <Text align='left' variant='info'>
-            <a>Add frequency tiers</a> to establish variable pricing for
-            specific intervals based on the frequency of purchase.
+            {buttonCardText}
           </Text>
         </ButtonCard>
       ) : (
@@ -79,11 +100,11 @@ export const PriceFrequencyTiers: FC<Props> = ({
           }
           tbody={
             <>
-              {price.price_frequency_tiers.map((tier) => (
+              {priceTiers?.map((tier) => (
                 <TableItemPriceTier
                   key={tier.id}
                   resource={tier}
-                  type='frequency'
+                  type={type}
                   mutatePrice={mutatePrice}
                 />
               ))}
