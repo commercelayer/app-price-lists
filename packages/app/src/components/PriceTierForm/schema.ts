@@ -6,7 +6,7 @@ export const priceTierFormSchema = z
     id: z.string().optional(),
     name: z.string().min(1),
     currency_code: z.string().min(1),
-    up_to: z.string().min(1),
+    up_to: z.string(),
     up_to_days: z.string().optional(),
     price: z.number(),
     type: z.string()

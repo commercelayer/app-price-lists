@@ -1,6 +1,7 @@
 import { appRoutes } from '#data/routes'
-import { isMock, makePriceVolumeTier } from '#mocks'
-import { getUpToForForm } from '#utils/tierUpTo'
+import { isMock, makePriceTier } from '#mocks'
+import type { PriceTierType } from '#types'
+import { getPriceTierSdkResource, getUpToForTable } from '#utils/priceTiers'
 import {
   Button,
   Dropdown,
@@ -15,19 +16,24 @@ import {
   useTokenProvider,
   withSkeletonTemplate
 } from '@commercelayer/app-elements'
-import type { Price, PriceVolumeTier } from '@commercelayer/sdk'
+import type {
+  Price,
+  PriceFrequencyTier,
+  PriceVolumeTier
+} from '@commercelayer/sdk'
 
 import { useState } from 'react'
 import type { KeyedMutator } from 'swr'
 import { useLocation, useRoute } from 'wouter'
 
 interface Props {
-  resource: PriceVolumeTier
+  type: PriceTierType
+  resource: PriceFrequencyTier | PriceVolumeTier
   mutatePrice: KeyedMutator<Price>
 }
 
-export const TableItemPriceVolumeTier = withSkeletonTemplate<Props>(
-  ({ resource = makePriceVolumeTier(), mutatePrice }) => {
+export const TableItemPriceTier = withSkeletonTemplate<Props>(
+  ({ type, resource = makePriceTier(type), mutatePrice }) => {
     const [, params] = useRoute<{ priceListId: string; priceId: string }>(
       appRoutes.priceDetails.path
     )
@@ -42,13 +48,17 @@ export const TableItemPriceVolumeTier = withSkeletonTemplate<Props>(
 
     const [isDeleteting, setIsDeleting] = useState(false)
 
-    const contextMenuEdit = canUser('update', 'price_volume_tiers') &&
+    const sdkResource = getPriceTierSdkResource(type)
+    const appRoutesPath =
+      type === 'frequency' ? 'priceFrequencyTierEdit' : 'priceVolumeTierEdit'
+
+    const contextMenuEdit = canUser('update', sdkResource) &&
       !isMock(resource) && (
         <DropdownItem
           label='Edit'
           onClick={() => {
             setLocation(
-              appRoutes.priceVolumeTierEdit.makePath({
+              appRoutes[appRoutesPath].makePath({
                 priceListId,
                 priceId,
                 tierId: resource.id
@@ -58,10 +68,10 @@ export const TableItemPriceVolumeTier = withSkeletonTemplate<Props>(
         />
       )
 
-    const contextMenuDivider = canUser('update', 'price_volume_tiers') &&
-      canUser('destroy', 'price_volume_tiers') && <DropdownDivider />
+    const contextMenuDivider = canUser('update', sdkResource) &&
+      canUser('destroy', sdkResource) && <DropdownDivider />
 
-    const contextMenuDelete = canUser('destroy', 'price_volume_tiers') && (
+    const contextMenuDelete = canUser('destroy', sdkResource) && (
       <DropdownItem
         label='Delete'
         onClick={() => {
@@ -87,14 +97,14 @@ export const TableItemPriceVolumeTier = withSkeletonTemplate<Props>(
       <>
         <Tr key={resource.id}>
           <Td>{resource.name}</Td>
-          <Td>{getUpToForForm(resource?.up_to)}</Td>
+          <Td>{getUpToForTable(resource?.up_to, type)}</Td>
           <Td>{resource.formatted_price_amount}</Td>
-          <Td align='right'>{contextMenu}</Td>
+          <Td>{contextMenu}</Td>
         </Tr>
-        {canUser('destroy', 'price_volume_tiers') && (
+        {canUser('destroy', sdkResource) && (
           <Overlay>
             <PageLayout
-              title={`Confirm that you want to delete the price volume tier with name ${resource.name}.`}
+              title={`Confirm that you want to delete the price ${type} tier with name ${resource.name}.`}
               description='This action cannot be undone, proceed with caution.'
               minHeight={false}
               navigationButton={{
@@ -112,16 +122,19 @@ export const TableItemPriceVolumeTier = withSkeletonTemplate<Props>(
                 onClick={(e) => {
                   setIsDeleting(true)
                   e.stopPropagation()
-                  void sdkClient.price_volume_tiers
+                  void sdkClient[sdkResource]
                     .delete(resource.id)
                     .then(() => {
                       void mutatePrice()
                       close()
                     })
                     .catch(() => {})
+                    .finally(() => {
+                      setIsDeleting(false)
+                    })
                 }}
               >
-                Delete price volume tier
+                Delete price {type} tier
               </Button>
             </PageLayout>
           </Overlay>

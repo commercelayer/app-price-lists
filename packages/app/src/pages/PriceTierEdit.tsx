@@ -3,10 +3,15 @@ import {
   type PriceTierFormValues
 } from '#components/PriceTierForm'
 import { appRoutes } from '#data/routes'
-import { usePriceFrequencyTierDetails } from '#hooks/usePriceFrequencyTierDetails'
 import { usePriceListDetails } from '#hooks/usePriceListDetails'
-import { getFrequencyForForm } from '#utils/frequencies'
-import { getUpToFromForm } from '#utils/tierUpTo'
+import { usePriceTierDetails } from '#hooks/usePriceTierDetails'
+import type { PriceTierType } from '#types'
+import {
+  getPriceTierSdkResource,
+  getUpToForForm,
+  getUpToFromForm,
+  isUpToForFrequencyFormCustom
+} from '#utils/priceTiers'
 import {
   Button,
   EmptyState,
@@ -19,27 +24,35 @@ import {
 import {
   type PriceFrequencyTier,
   type PriceFrequencyTierUpdate,
-  type PriceList
+  type PriceList,
+  type PriceVolumeTier,
+  type PriceVolumeTierUpdate
 } from '@commercelayer/sdk'
 import { useState } from 'react'
 import { Link, useLocation, useRoute } from 'wouter'
 
-export function PriceFrequencyTierEdit(): JSX.Element {
+export function PriceTierEdit(): JSX.Element {
   const {
     canUser,
     settings: { mode }
   } = useTokenProvider()
   const { sdkClient } = useCoreSdkProvider()
-  const [, setLocation] = useLocation()
+  const [location, setLocation] = useLocation()
 
   const [apiError, setApiError] = useState<any>()
   const [isSaving, setIsSaving] = useState(false)
+
+  const tierType = location.includes('frequency') ? 'frequency' : 'volume'
+
+  const pathName =
+    tierType === 'frequency' ? 'priceFrequencyTierEdit' : 'priceVolumeTierEdit'
+  const sdkResource = getPriceTierSdkResource(tierType)
 
   const [, params] = useRoute<{
     priceListId: string
     priceId: string
     tierId: string
-  }>(appRoutes.priceFrequencyTierEdit.path)
+  }>(appRoutes[pathName].path)
 
   const priceListId = params?.priceListId ?? ''
   const priceId = params?.priceId ?? ''
@@ -54,7 +67,7 @@ export function PriceFrequencyTierEdit(): JSX.Element {
     isLoading: isLoadingTier,
     error: errorTier,
     mutateTier
-  } = usePriceFrequencyTierDetails(tierId)
+  } = usePriceTierDetails(tierId, tierType)
 
   const pageTitle = 'Edit tier'
 
@@ -89,7 +102,7 @@ export function PriceFrequencyTierEdit(): JSX.Element {
 
   const goBackUrl = appRoutes.priceDetails.makePath({ priceListId, priceId })
 
-  if (!canUser('update', 'price_frequency_tiers')) {
+  if (!canUser('update', sdkResource)) {
     return (
       <PageLayout
         title={pageTitle}
@@ -133,16 +146,21 @@ export function PriceFrequencyTierEdit(): JSX.Element {
       <SkeletonTemplate isLoading={isLoadingPriceList || isLoadingTier}>
         <Spacer bottom='14'>
           <PriceTierForm
-            defaultValues={adaptPriceFrequencyTierToFormValues(tier, priceList)}
+            defaultValues={adaptPriceTierToFormValues(
+              tier,
+              priceList,
+              tierType
+            )}
             apiError={apiError}
             isSubmitting={isSaving}
             onSubmit={(formValues) => {
               setIsSaving(true)
-              const tier = adaptFormValuesToPriceFrequencyTier(
+              const tier = adaptFormValuesToPriceTier(
                 formValues,
-                priceId
+                priceId,
+                tierType
               )
-              void sdkClient.price_frequency_tiers
+              void sdkClient[sdkResource]
                 .update(tier)
                 .then((updatedTier) => {
                   void mutateTier({ ...updatedTier })
@@ -165,35 +183,44 @@ export function PriceFrequencyTierEdit(): JSX.Element {
   )
 }
 
-function adaptPriceFrequencyTierToFormValues(
-  tier?: PriceFrequencyTier,
-  priceList?: PriceList
+function adaptPriceTierToFormValues(
+  tier: PriceFrequencyTier | PriceVolumeTier,
+  priceList: PriceList,
+  type: PriceTierType
 ): PriceTierFormValues {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const frequencyForForm = getFrequencyForForm(tier)
-  return {
-    id: tier?.id,
-    name: tier?.name ?? '',
-    up_to:
-      frequencyForForm.type === 'frequency' ? frequencyForForm.up_to ?? '' : '',
-    up_to_days:
-      frequencyForForm.type === 'frequency'
-        ? frequencyForForm.up_to_days ?? ''
-        : '',
-    currency_code: priceList?.currency_code ?? '',
-    price: tier?.price_amount_cents ?? 0,
-    type: 'frequency'
+  const isFrequencyCustom = isUpToForFrequencyFormCustom(tier.up_to)
+  const frequencyForForm = getUpToForForm(tier.up_to, 'frequency')
+  const defaultValues = {
+    id: tier.id,
+    name: tier.name ?? '',
+    up_to: '',
+    up_to_days: '',
+    currency_code: priceList.currency_code ?? '',
+    price: tier.price_amount_cents,
+    type
   }
+
+  if (type === 'frequency') {
+    defaultValues.up_to = isFrequencyCustom ? 'custom' : frequencyForForm
+    defaultValues.up_to_days = isFrequencyCustom ? frequencyForForm : ''
+  } else {
+    defaultValues.up_to = getUpToForForm(tier.up_to, 'volume')
+  }
+  return defaultValues
 }
 
-function adaptFormValuesToPriceFrequencyTier(
+function adaptFormValuesToPriceTier(
   formValues: PriceTierFormValues,
-  priceId: string
-): PriceFrequencyTierUpdate {
+  priceId: string,
+  type: PriceTierType
+): PriceFrequencyTierUpdate | PriceVolumeTierUpdate {
   return {
     id: formValues.id ?? '',
     name: formValues.name,
-    up_to: getUpToFromForm(formValues),
+    up_to:
+      type === 'volume'
+        ? parseInt(formValues.up_to)
+        : getUpToFromForm(formValues),
     price_amount_cents: formValues.price,
     price: {
       id: priceId,

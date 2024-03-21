@@ -2,13 +2,11 @@ import { ErrorNotFound } from '#pages/ErrorNotFound'
 import { Home } from '#pages/Home'
 import { PriceDetails } from '#pages/PriceDetails'
 import { PriceEdit } from '#pages/PriceEdit'
-import { PriceFrequencyTierEdit } from '#pages/PriceFrequencyTierEdit'
-import { PriceFrequencyTierNew } from '#pages/PriceFrequencyTierNew'
 import { PriceListEdit } from '#pages/PriceListEdit'
 import { PriceListNew } from '#pages/PriceListNew'
 import { PriceNew } from '#pages/PriceNew'
-import { PriceVolumeTierEdit } from '#pages/PriceVolumeTierEdit'
-import { PriceVolumeTierNew } from '#pages/PriceVolumeTierNew'
+import { PriceTierEdit } from '#pages/PriceTierEdit'
+import { PriceTierNew } from '#pages/PriceTierNew'
 import { PricesList } from '#pages/PricesList'
 import type { FC } from 'react'
 import { Route, Router, Switch } from 'wouter'
@@ -31,19 +29,19 @@ export const App: FC<AppProps> = ({ routerBase }) => {
         <Route path={appRoutes.priceDetails.path} component={PriceDetails} />
         <Route
           path={appRoutes.priceFrequencyTierEdit.path}
-          component={PriceFrequencyTierEdit}
+          component={PriceTierEdit}
         />
         <Route
           path={appRoutes.priceFrequencyTierNew.path}
-          component={PriceFrequencyTierNew}
+          component={PriceTierNew}
         />
         <Route
           path={appRoutes.priceVolumeTierEdit.path}
-          component={PriceVolumeTierEdit}
+          component={PriceTierEdit}
         />
         <Route
           path={appRoutes.priceVolumeTierNew.path}
-          component={PriceVolumeTierNew}
+          component={PriceTierNew}
         />
         <Route>
           <ErrorNotFound />

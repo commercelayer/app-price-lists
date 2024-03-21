@@ -5,6 +5,8 @@ import {
 import { appRoutes } from '#data/routes'
 import { usePriceDetails } from '#hooks/usePriceDetails'
 import { usePriceListDetails } from '#hooks/usePriceListDetails'
+import type { PriceTierType } from '#types'
+import { getPriceTierSdkResource, getUpToFromForm } from '#utils/priceTiers'
 import {
   Button,
   EmptyState,
@@ -14,40 +16,49 @@ import {
   useCoreSdkProvider,
   useTokenProvider
 } from '@commercelayer/app-elements'
-import { type PriceVolumeTierCreate } from '@commercelayer/sdk'
+import {
+  type PriceFrequencyTierCreate,
+  type PriceVolumeTierCreate
+} from '@commercelayer/sdk'
 import { useState } from 'react'
 import { Link, useLocation, useRoute } from 'wouter'
 
-export function PriceVolumeTierNew(): JSX.Element {
+export function PriceTierNew(): JSX.Element {
   const {
     canUser,
     settings: { mode }
   } = useTokenProvider()
   const { sdkClient } = useCoreSdkProvider()
-  const [, setLocation] = useLocation()
+  const [location, setLocation] = useLocation()
 
   const [apiError, setApiError] = useState<any>()
   const [isSaving, setIsSaving] = useState(false)
 
+  const tierType = location.includes('frequency') ? 'frequency' : 'volume'
+
+  const pathName =
+    tierType === 'frequency' ? 'priceFrequencyTierNew' : 'priceVolumeTierNew'
+  const sdkResource = getPriceTierSdkResource(tierType)
+
   const [, params] = useRoute<{ priceListId: string; priceId: string }>(
-    appRoutes.priceVolumeTierNew.path
+    appRoutes[pathName].path
   )
   const priceListId = params?.priceListId ?? ''
   const priceId = params?.priceId ?? ''
-  const { priceList, error } = usePriceListDetails(priceListId)
+  const { priceList, isLoading, error } = usePriceListDetails(priceListId)
   const {
     price,
-    isLoading,
-    error: priceError,
-    mutatePrice
+    isLoading: isLoadingPrice,
+    error: priceError
   } = usePriceDetails(priceId)
 
   const pageTitle = 'New tier'
+  const priceTiers = price[sdkResource]
 
   if (
     error != null ||
     priceError != null ||
-    (price.price_volume_tiers != null && price.price_volume_tiers.length >= 5)
+    (priceTiers != null && priceTiers.length >= 5)
   ) {
     return (
       <PageLayout
@@ -75,7 +86,7 @@ export function PriceVolumeTierNew(): JSX.Element {
 
   const goBackUrl = appRoutes.priceDetails.makePath({ priceListId, priceId })
 
-  if (!canUser('create', 'price_volume_tiers')) {
+  if (!canUser('create', sdkResource)) {
     return (
       <PageLayout
         title={pageTitle}
@@ -116,23 +127,26 @@ export function PriceVolumeTierNew(): JSX.Element {
       scrollToTop
       overlay
     >
-      <SkeletonTemplate isLoading={isLoading}>
+      <SkeletonTemplate isLoading={isLoading || isLoadingPrice}>
         <Spacer bottom='14'>
           <PriceTierForm
             defaultValues={{
               currency_code: priceList.currency_code,
               price: 0,
-              type: 'volume'
+              type: tierType
             }}
             apiError={apiError}
             isSubmitting={isSaving}
             onSubmit={(formValues) => {
               setIsSaving(true)
-              const tier = adaptFormValuesToPriceVolumeTier(formValues, priceId)
-              void sdkClient.price_volume_tiers
+              const tier = adaptFormValuesToPriceTier(
+                formValues,
+                priceId,
+                tierType
+              )
+              void sdkClient[sdkResource]
                 .create(tier)
                 .then(() => {
-                  void mutatePrice()
                   setLocation(
                     appRoutes.priceDetails.makePath({
                       priceListId,
@@ -152,13 +166,17 @@ export function PriceVolumeTierNew(): JSX.Element {
   )
 }
 
-function adaptFormValuesToPriceVolumeTier(
+function adaptFormValuesToPriceTier(
   formValues: PriceTierFormValues,
-  priceId: string
-): PriceVolumeTierCreate {
+  priceId: string,
+  type: PriceTierType
+): PriceFrequencyTierCreate | PriceVolumeTierCreate {
   return {
     name: formValues.name,
-    up_to: formValues.type === 'volume' ? parseInt(formValues.up_to) : 0,
+    up_to:
+      type === 'frequency'
+        ? getUpToFromForm(formValues)
+        : parseInt(formValues.up_to),
     price_amount_cents: formValues.price,
     price: {
       id: priceId,

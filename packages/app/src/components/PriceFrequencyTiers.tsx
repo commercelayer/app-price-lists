@@ -12,7 +12,7 @@ import type { Price } from '@commercelayer/sdk'
 import type { FC } from 'react'
 import type { KeyedMutator } from 'swr'
 import { Link, useLocation, useRoute } from 'wouter'
-import { TableItemPriceFrequencyTier } from './TableItemPriceFrequencyTier'
+import { TableItemPriceTier } from './TableItemPriceTier'
 
 interface Props {
   price: Price
@@ -80,9 +80,10 @@ export const PriceFrequencyTiers: FC<Props> = ({
           tbody={
             <>
               {price.price_frequency_tiers.map((tier) => (
-                <TableItemPriceFrequencyTier
+                <TableItemPriceTier
                   key={tier.id}
                   resource={tier}
+                  type='frequency'
                   mutatePrice={mutatePrice}
                 />
               ))}
