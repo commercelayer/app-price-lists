@@ -57,15 +57,14 @@ export const PriceTiers: FC<Props> = ({
       border='none'
       actionButton={
         priceTiers != null &&
-        priceTiers.length > 0 &&
-        priceTiers.length <= 5 && (
+        priceTiers.length > 0 && (
           <Link
             href={appRoutes[buttonCardCtaPathName].makePath({
               priceListId,
               priceId: price.id
             })}
           >
-            Add tier (up to 5)
+            Add tier
           </Link>
         )
       }

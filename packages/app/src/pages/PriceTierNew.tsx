@@ -3,7 +3,6 @@ import {
   type PriceTierFormValues
 } from '#components/PriceTierForm'
 import { appRoutes } from '#data/routes'
-import { usePriceDetails } from '#hooks/usePriceDetails'
 import { usePriceListDetails } from '#hooks/usePriceListDetails'
 import type { PriceTierType } from '#types'
 import { getPriceTierSdkResource, getUpToFromForm } from '#utils/priceTiers'
@@ -46,20 +45,10 @@ export function PriceTierNew(): JSX.Element {
   const priceListId = params?.priceListId ?? ''
   const priceId = params?.priceId ?? ''
   const { priceList, isLoading, error } = usePriceListDetails(priceListId)
-  const {
-    price,
-    isLoading: isLoadingPrice,
-    error: priceError
-  } = usePriceDetails(priceId)
 
   const pageTitle = 'New tier'
-  const priceTiers = price[sdkResource]
 
-  if (
-    error != null ||
-    priceError != null ||
-    (priceTiers != null && priceTiers.length >= 5)
-  ) {
+  if (error != null) {
     return (
       <PageLayout
         title={pageTitle}
@@ -127,7 +116,7 @@ export function PriceTierNew(): JSX.Element {
       scrollToTop
       overlay
     >
-      <SkeletonTemplate isLoading={isLoading || isLoadingPrice}>
+      <SkeletonTemplate isLoading={isLoading}>
         <Spacer bottom='14'>
           <PriceTierForm
             defaultValues={{
