@@ -3,7 +3,9 @@ import { makePrice } from '#mocks'
 import type { PriceTierType } from '#types'
 import { getPriceTierSdkResource } from '#utils/priceTiers'
 import {
-  ButtonCard,
+  Button,
+  Icon,
+  ListItem,
   Section,
   Table,
   Text,
@@ -32,7 +34,8 @@ export const PriceTiers: FC<Props> = ({
     appRoutes.priceDetails.path
   )
   const priceListId = params?.priceListId ?? ''
-  const sectionTitle = `${type.charAt(0).toUpperCase()}${type.slice(1)} pricing`
+  const tierLabel = `${type.charAt(0).toUpperCase()}${type.slice(1)}`
+  const sectionTitle = `${tierLabel} pricing`
   const sdkResource = getPriceTierSdkResource(type)
   const priceTiers = price[sdkResource]
   const buttonCardCtaPathName =
@@ -41,14 +44,11 @@ export const PriceTiers: FC<Props> = ({
   const buttonCardText =
     type === 'frequency' ? (
       <>
-        <a>Add frequency tiers</a> to establish variable pricing for specific
-        intervals based on the frequency of purchase.
+        Establish variable pricing for specific intervals based on the frequency
+        of purchase.
       </>
     ) : (
-      <>
-        <a>Add volume tiers</a> to enable flexible price adjustments based on
-        the quantities purchased
-      </>
+      <>Enable flexible price adjustments based on the quantities purchased.</>
     )
 
   return (
@@ -69,24 +69,32 @@ export const PriceTiers: FC<Props> = ({
         )
       }
     >
-      {price.price_frequency_tiers == null ||
-      price.price_frequency_tiers?.length === 0 ? (
-        <ButtonCard
-          icon={buttonCardIcon}
-          padding='6'
-          onClick={() => {
-            setLocation(
-              appRoutes[buttonCardCtaPathName].makePath({
-                priceListId,
-                priceId: price.id
-              })
-            )
-          }}
+      {price[sdkResource] == null || price[sdkResource]?.length === 0 ? (
+        <ListItem
+          variant='boxed'
+          paddingSize='6'
+          tag='div'
+          alignIcon='center'
+          icon={<Icon name={buttonCardIcon} size={32} />}
         >
-          <Text align='left' variant='info'>
-            {buttonCardText}
-          </Text>
-        </ButtonCard>
+          <Text>{buttonCardText}</Text>
+          <Button
+            alignItems='center'
+            variant='secondary'
+            size='small'
+            onClick={() => {
+              setLocation(
+                appRoutes[buttonCardCtaPathName].makePath({
+                  priceListId,
+                  priceId: price.id
+                })
+              )
+            }}
+          >
+            <Icon name='plus' size={16} />
+            {tierLabel} tier
+          </Button>
+        </ListItem>
       ) : (
         <Table
           thead={
