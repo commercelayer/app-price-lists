@@ -43,7 +43,7 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
             src={resource.sku?.image_url as `https://${string}`}
           />
         }
-        alignItems='center'
+        alignItems='top'
         onClick={() => {
           setLocation(
             appRoutes.priceDetails.makePath({
@@ -76,7 +76,13 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
           )}
         </div>
         <div>
-          <Text tag='div' weight='medium' size='small' variant='info'>
+          <Text
+            tag='div'
+            weight='medium'
+            size='small'
+            variant='info'
+            wrap='nowrap'
+          >
             {resource.formatted_compare_at_amount !==
             resource.formatted_amount ? (
               <s>{resource.formatted_compare_at_amount}</s>
@@ -84,7 +90,7 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
               <>&nbsp;</>
             )}
           </Text>
-          <Text tag='div' weight='semibold'>
+          <Text tag='div' weight='semibold' wrap='nowrap'>
             {resource.formatted_amount}
           </Text>
         </div>

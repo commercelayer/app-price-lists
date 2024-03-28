@@ -20,8 +20,8 @@ export const ListItemSku = withSkeletonTemplate<Props>(
   ({ resource = makeSku(), variant, disabled = false, onSelect }) => {
     return (
       <ListItem
-        tag='a'
-        onClick={(e) => {
+        tag={disabled ? 'div' : 'a'}
+        onClick={(e: any) => {
           e.preventDefault()
           if (!disabled && onSelect != null) {
             onSelect(resource)
