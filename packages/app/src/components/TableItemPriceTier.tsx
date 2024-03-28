@@ -99,7 +99,7 @@ export const TableItemPriceTier = withSkeletonTemplate<Props>(
           <Td>{resource.name}</Td>
           <Td>{getUpToForTable(resource?.up_to, type)}</Td>
           <Td>{resource.formatted_price_amount}</Td>
-          <Td>{contextMenu}</Td>
+          <Td align='right'>{contextMenu}</Td>
         </Tr>
         {canUser('destroy', sdkResource) && (
           <Overlay>
