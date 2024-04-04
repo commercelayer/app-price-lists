@@ -73,7 +73,6 @@ export const PriceTiers: FC<Props> = ({
         <ListItem
           variant='boxed'
           paddingSize='6'
-          tag='div'
           alignIcon='center'
           icon={<Icon name={buttonCardIcon} size={32} />}
         >

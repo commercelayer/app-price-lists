@@ -20,13 +20,16 @@ export const ListItemSku = withSkeletonTemplate<Props>(
   ({ resource = makeSku(), variant, disabled = false, onSelect }) => {
     return (
       <ListItem
-        tag={disabled ? 'div' : 'a'}
-        onClick={(e: any) => {
-          e.preventDefault()
-          if (!disabled && onSelect != null) {
-            onSelect(resource)
-          }
-        }}
+        onClick={
+          !disabled
+            ? (e: any) => {
+                e.preventDefault()
+                if (onSelect != null) {
+                  onSelect(resource)
+                }
+              }
+            : undefined
+        }
         icon={
           <Avatar
             alt={resource.name}

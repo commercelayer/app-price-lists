@@ -36,7 +36,6 @@ export const ListItemPrice = withSkeletonTemplate<Props>(
 
     return (
       <ListItem
-        tag='a'
         icon={
           <Avatar
             alt={resource.sku?.name ?? ''}
