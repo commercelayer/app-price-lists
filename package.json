@@ -37,6 +37,7 @@
   },
   "resolutions": {
     "ip": "^2.0.1",
-    "follow-redirects": "^1.15.6"
+    "follow-redirects": "^1.15.6",
+    "tar": "^6.2.1"
   }
 }
