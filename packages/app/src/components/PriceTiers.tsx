@@ -10,13 +10,37 @@ import {
   Table,
   Text,
   Th,
-  Tr
+  Tr,
+  type IconProps
 } from '@commercelayer/app-elements'
 import type { Price } from '@commercelayer/sdk'
 import type { FC } from 'react'
 import type { KeyedMutator } from 'swr'
 import { Link, useLocation, useRoute } from 'wouter'
 import { TableItemPriceTier } from './TableItemPriceTier'
+
+interface PriceTierConfigItem {
+  buttonCardCtaPathName: 'priceFrequencyTierNew' | 'priceVolumeTierNew'
+  buttonCardText: string
+  buttonCardIcon: IconProps['name']
+}
+
+type PriceTierConfig = Record<PriceTierType, PriceTierConfigItem>
+
+const priceTiersConfig: PriceTierConfig = {
+  frequency: {
+    buttonCardCtaPathName: 'priceFrequencyTierNew',
+    buttonCardText:
+      'Establish variable pricing for specific intervals based on the frequency of purchase.',
+    buttonCardIcon: 'calendarBlank'
+  },
+  volume: {
+    buttonCardCtaPathName: 'priceVolumeTierNew',
+    buttonCardText:
+      'Enable flexible price adjustments based on the quantities purchased.',
+    buttonCardIcon: 'stack'
+  }
+}
 
 interface Props {
   price: Price
@@ -38,18 +62,7 @@ export const PriceTiers: FC<Props> = ({
   const sectionTitle = `${tierLabel} pricing`
   const sdkResource = getPriceTierSdkResource(type)
   const priceTiers = price[sdkResource]
-  const buttonCardCtaPathName =
-    type === 'frequency' ? 'priceFrequencyTierNew' : 'priceVolumeTierNew'
-  const buttonCardIcon = type === 'frequency' ? 'calendarBlank' : 'stack'
-  const buttonCardText =
-    type === 'frequency' ? (
-      <>
-        Establish variable pricing for specific intervals based on the frequency
-        of purchase.
-      </>
-    ) : (
-      <>Enable flexible price adjustments based on the quantities purchased.</>
-    )
+  const buttonCardCtaPathName = priceTiersConfig[type].buttonCardCtaPathName
 
   return (
     <Section
@@ -74,9 +87,9 @@ export const PriceTiers: FC<Props> = ({
           variant='boxed'
           paddingSize='6'
           alignIcon='center'
-          icon={<Icon name={buttonCardIcon} size={32} />}
+          icon={<Icon name={priceTiersConfig[type].buttonCardIcon} size={32} />}
         >
-          <Text>{buttonCardText}</Text>
+          <Text>{priceTiersConfig[type].buttonCardText}</Text>
           <Button
             alignItems='center'
             variant='secondary'
