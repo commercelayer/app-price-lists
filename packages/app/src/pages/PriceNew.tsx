@@ -107,9 +107,9 @@ export function PriceNew(): JSX.Element {
           isSubmitting={isSaving}
           onSubmit={(formValues) => {
             setIsSaving(true)
-            const stockItem = adaptFormValuesToPrice(formValues, priceListId)
+            const price = adaptFormValuesToPrice(formValues, priceListId)
             void sdkClient.prices
-              .create(stockItem)
+              .create(price)
               .then((createdPrice) => {
                 setLocation(
                   appRoutes.priceDetails.makePath({
