@@ -20,7 +20,17 @@ export const appRoutes = {
   pricesList: createRoute('/:priceListId/list/'),
   priceNew: createRoute('/:priceListId/list/new/'),
   priceDetails: createRoute('/:priceListId/list/:priceId/'),
-  priceEdit: createRoute('/:priceListId/list/:priceId/edit/')
-  // priceTierNew
-  // priceTierEdit
+  priceEdit: createRoute('/:priceListId/list/:priceId/edit/'),
+  priceVolumeTierNew: createRoute(
+    '/:priceListId/list/:priceId/volume-tiers/new/'
+  ),
+  priceFrequencyTierNew: createRoute(
+    '/:priceListId/list/:priceId/frequency-tiers/new/'
+  ),
+  priceVolumeTierEdit: createRoute(
+    '/:priceListId/list/:priceId/volume-tiers/:tierId/edit/'
+  ),
+  priceFrequencyTierEdit: createRoute(
+    '/:priceListId/list/:priceId/frequency-tiers/:tierId/edit/'
+  )
 }
