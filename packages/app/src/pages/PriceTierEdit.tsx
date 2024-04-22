@@ -155,11 +155,7 @@ export function PriceTierEdit(): JSX.Element {
             isSubmitting={isSaving}
             onSubmit={(formValues) => {
               setIsSaving(true)
-              const tier = adaptFormValuesToPriceTier(
-                formValues,
-                priceId,
-                tierType
-              )
+              const tier = adaptFormValuesToPriceTier(formValues, priceId)
               void sdkClient[sdkResource]
                 .update(tier)
                 .then((updatedTier) => {
@@ -211,16 +207,12 @@ function adaptPriceTierToFormValues(
 
 function adaptFormValuesToPriceTier(
   formValues: PriceTierFormValues,
-  priceId: string,
-  type: PriceTierType
+  priceId: string
 ): PriceFrequencyTierUpdate | PriceVolumeTierUpdate {
   return {
     id: formValues.id ?? '',
     name: formValues.name,
-    up_to:
-      type === 'volume'
-        ? parseInt(formValues.up_to)
-        : getUpToFromForm(formValues),
+    up_to: getUpToFromForm(formValues),
     price_amount_cents: formValues.price,
     price: {
       id: priceId,

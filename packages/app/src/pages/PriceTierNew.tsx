@@ -4,7 +4,6 @@ import {
 } from '#components/PriceTierForm'
 import { appRoutes } from '#data/routes'
 import { usePriceListDetails } from '#hooks/usePriceListDetails'
-import type { PriceTierType } from '#types'
 import { getPriceTierSdkResource, getUpToFromForm } from '#utils/priceTiers'
 import {
   Button,
@@ -128,11 +127,7 @@ export function PriceTierNew(): JSX.Element {
             isSubmitting={isSaving}
             onSubmit={(formValues) => {
               setIsSaving(true)
-              const tier = adaptFormValuesToPriceTier(
-                formValues,
-                priceId,
-                tierType
-              )
+              const tier = adaptFormValuesToPriceTier(formValues, priceId)
               void sdkClient[sdkResource]
                 .create(tier)
                 .then(() => {
@@ -157,15 +152,11 @@ export function PriceTierNew(): JSX.Element {
 
 function adaptFormValuesToPriceTier(
   formValues: PriceTierFormValues,
-  priceId: string,
-  type: PriceTierType
+  priceId: string
 ): PriceFrequencyTierCreate | PriceVolumeTierCreate {
   return {
     name: formValues.name,
-    up_to:
-      type === 'frequency'
-        ? getUpToFromForm(formValues)
-        : parseInt(formValues.up_to),
+    up_to: getUpToFromForm(formValues),
     price_amount_cents: formValues.price,
     price: {
       id: priceId,
