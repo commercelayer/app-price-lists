@@ -9,6 +9,7 @@ import {
   DropdownDivider,
   DropdownItem,
   EmptyState,
+  Icon,
   PageLayout,
   SkeletonTemplate,
   useCoreSdkProvider,
@@ -95,6 +96,11 @@ export function PricesList(): JSX.Element {
 
   const contextMenu = (
     <Dropdown
+      dropdownLabel={
+        <Button variant='secondary' size='small'>
+          <Icon name='dotsThree' size={16} weight='bold' />
+        </Button>
+      }
       dropdownItems={
         <>
           {contextMenuEdit}
@@ -153,8 +159,16 @@ export function PricesList(): JSX.Element {
         }}
         actionButton={
           canUser('create', 'prices') && (
-            <Link href={appRoutes.priceNew.makePath({ priceListId })}>
-              Add new
+            <Link href={appRoutes.priceNew.makePath({ priceListId })} asChild>
+              <Button
+                variant='secondary'
+                size='mini'
+                alignItems='center'
+                aria-label='Add price'
+              >
+                <Icon name='plus' />
+                Price
+              </Button>
             </Link>
           )
         }

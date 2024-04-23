@@ -5,6 +5,7 @@ import {
   Button,
   EmptyState,
   HomePageLayout,
+  Icon,
   useResourceFilters,
   useTokenProvider
 } from '@commercelayer/app-elements'
@@ -79,7 +80,17 @@ export function Home(): JSX.Element {
         }
         actionButton={
           canUser('create', 'price_lists') ? (
-            <Link href={appRoutes.priceListNew.makePath({})}>Add new</Link>
+            <Link href={appRoutes.priceListNew.makePath({})} asChild>
+              <Button
+                variant='secondary'
+                size='mini'
+                alignItems='center'
+                aria-label='Add price list'
+              >
+                <Icon name='plus' />
+                Price list
+              </Button>
+            </Link>
           ) : undefined
         }
       />
