@@ -4,6 +4,7 @@ import {
   DropdownDivider,
   DropdownItem,
   EmptyState,
+  Icon,
   PageLayout,
   SkeletonTemplate,
   Spacer,
@@ -93,6 +94,11 @@ export function PriceDetails(): JSX.Element {
 
   const contextMenu = (
     <Dropdown
+      dropdownLabel={
+        <Button variant='secondary' size='small'>
+          <Icon name='dotsThree' size={16} weight='bold' />
+        </Button>
+      }
       dropdownItems={
         <>
           {contextMenuEdit}

@@ -76,8 +76,17 @@ export const PriceTiers: FC<Props> = ({
               priceListId,
               priceId: price.id
             })}
+            asChild
           >
-            Add tier
+            <Button
+              variant='secondary'
+              size='mini'
+              alignItems='center'
+              aria-label='Add tier'
+            >
+              <Icon name='plus' />
+              Tier
+            </Button>
           </Link>
         )
       }
