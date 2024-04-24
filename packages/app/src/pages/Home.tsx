@@ -88,7 +88,7 @@ export function Home(): JSX.Element {
                 aria-label='Add price list'
               >
                 <Icon name='plus' />
-                Price list
+                New
               </Button>
             </Link>
           ) : undefined
