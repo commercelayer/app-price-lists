@@ -1,7 +1,6 @@
 import { useAddItemOverlay } from '#hooks/useAddItemOverlay'
 import {
   Button,
-  ButtonCard,
   HookedForm,
   HookedInputCurrency,
   HookedValidationApiError,
@@ -71,14 +70,15 @@ export function PriceForm({
             <Text weight='semibold'>SKU</Text>
             <Spacer top='2'>
               {priceFormWatchedItem == null ? (
-                <ButtonCard
-                  iconLabel='Add item'
-                  padding='4'
+                <Button
+                  variant='relationship'
                   fullWidth
                   onClick={() => {
                     showAddItemOverlay({ type: 'skus' })
                   }}
-                />
+                >
+                  Add item
+                </Button>
               ) : (
                 <ListItemSku
                   resource={sku}
