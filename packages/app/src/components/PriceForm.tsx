@@ -71,6 +71,7 @@ export function PriceForm({
             <Spacer top='2'>
               {priceFormWatchedItem == null ? (
                 <Button
+                  type='button'
                   variant='relationship'
                   fullWidth
                   onClick={() => {
